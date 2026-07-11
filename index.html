@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CN SERVICE TRADING COMPANY LIMITED - Secure Payment Portal</title>
-    <link href="https://googleapis.com" rel="stylesheet">
     <style>
         :root {
             --bg-main: #050b14;
@@ -17,106 +16,288 @@
             --border: #1e293b;
             --success: #10b981;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-        body { background-color: var(--bg-main); color: var(--text-main); display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow-x: hidden; padding: 20px 0; }
-        .container { width: 100%; max-width: 1200px; padding: 20px; }
-        header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 30px; border-bottom: 1px solid var(--border); margin-bottom: 40px; }
-        .main-logo { height: 55px; filter: drop-shadow(0 0 10px var(--accent-glow)); transition: transform 0.3s ease; }
-        .main-logo:hover { transform: scale(1.05); }
-        .nav-links a { color: var(--text-muted); text-decoration: none; margin-right: 20px; font-weight: 500; transition: color 0.3s; }
-        .nav-links a.active, .nav-links a:hover { color: var(--accent); }
-        #btn-lang { background: none; border: 1px solid var(--accent); color: var(--accent); padding: 5px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; box-shadow: 0 0 8px var(--accent-glow); }
-        .payment-grid { display: grid; grid-template-columns: 1fr 450px; gap: 40px; margin-bottom: 40px; }
-        .invoice-panel { display: flex; flex-direction: column; justify-content: flex-start; gap: 20px; }
-        .badge-status { display: inline-flex; align-items: center; background: rgba(16, 185, 129, 0.1); color: var(--success); padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 500; width: fit-content; }
-        .badge-status .dot { width: 8px; height: 8px; background-color: var(--success); border-radius: 50%; margin-right: 8px; animation: pulse 2s infinite; }
-        .company-title { color: var(--text-white); font-size: 2.2rem; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 5px; }
-        .company-sub { color: var(--accent); text-transform: uppercase; font-size: 0.85rem; font-weight: 600; letter-spacing: 1px; margin-bottom: 10px; }
-        
-        .input-form { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 25px; display: flex; flex-direction: column; gap: 15px; }
-        .form-title { color: var(--text-white); font-size: 1.1rem; font-weight: 600; margin-bottom: 5px; }
-        .input-group { display: flex; flex-direction: column; gap: 8px; }
-        .input-group label { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
-        .input-field { background: var(--bg-main); border: 1px solid var(--border); border-radius: 10px; padding: 12px 15px; color: var(--text-white); font-size: 1rem; outline: none; transition: border-color 0.3s; }
-        .input-field:focus { border-color: var(--accent); box-shadow: 0 0 10px var(--accent-glow); }
-        
-        .info-table { border: 1px solid var(--border); border-radius: 12px; background: var(--bg-card); overflow: hidden; }
-        .info-row { display: flex; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--border); }
-        .info-row:last-child { border-bottom: none; }
-        .info-row .label { color: var(--text-muted); font-size: 0.9rem; }
-        .info-row .value { color: var(--text-white); font-weight: 500; text-align: right; max-width: 60%; }
-        .info-row .value.highlight { color: var(--accent); font-weight: 600; }
-        .info-row .value a { color: var(--accent); text-decoration: none; }
-        
-        .qr-panel { display: flex; justify-content: center; }
-        .qr-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 24px; padding: 30px; width: 100%; box-shadow: 0 20px 40px rgba(0,0,0,0.4); position: relative; }
-        .vcb-header { display: flex; justify-content: space-between; font-weight: 700; margin-bottom: 25px; }
-        .bank-name { color: var(--text-white); font-size: 1.2rem; }
-        .vietqr-badge { color: #e11d48; background: rgba(225,29,72,0.1); padding: 2px 10px; border-radius: 6px; font-size: 0.8rem; }
-        .qr-wrapper { background: #ffffff; padding: 15px; border-radius: 16px; display: flex; justify-content: center; margin-bottom: 20px; box-shadow: 0 0 25px rgba(0, 240, 255, 0.1); }
-        .qr-wrapper img { width: 100%; max-width: 260px; height: auto; }
-        .qr-instruction { text-align: center; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 25px; }
-        .account-details { background: var(--bg-main); border-radius: 12px; padding: 15px; margin-bottom: 25px; }
-        .acc-box { margin-bottom: 12px; }
-        .acc-box:last-child { margin-bottom: 0; }
-        .acc-label { display: block; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; }
-        .acc-value { color: var(--text-white); font-weight: 600; font-size: 1rem; }
-        .copy-wrapper { display: flex; justify-content: space-between; align-items: center; }
-        .btn-copy { background: rgba(0, 240, 255, 0.1); border: 1px solid rgba(0, 240, 255, 0.3); color: var(--accent); padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; }
-        .btn-primary, .btn-secondary { display: flex; align-items: center; justify-content: center; width: 100%; padding: 14px; border-radius: 12px; font-weight: 600; cursor: pointer; text-decoration: none; transition: all 0.2s; font-size: 0.95rem; }
-        .btn-primary { background: var(--accent); color: var(--bg-main); border: none; box-shadow: 0 4px 15px var(--accent-glow); }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px var(--accent); }
-        .action-footers { display: flex; gap: 15px; margin-top: 5px; }
-        .btn-secondary { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
-        .btn-secondary:hover { background: var(--border); color: var(--text-white); }
-        .text-center { text-align: center; }
-        .global-footer { text-align: center; color: var(--text-muted); font-size: 0.8rem; border-top: 1px solid var(--border); padding-top: 20px; margin-top: 20px; width: 100%; }
-        @keyframes pulse {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
         }
-        @media (max-width: 900px) { .payment-grid { grid-template-columns: 1fr; gap: 30px; } header { margin-bottom: 20px; } .company-title { font-size: 1.8rem; } }
-        @media print { body { background: white; color: black; } .dark-theme { --bg-main: #ffffff; --bg-card: #ffffff; --text-main: #000000; --text-white: #000000; --border: #cccccc; } .no-print, .lang-switcher, .btn-copy, .nav-links, .input-form { display: none !important; } .qr-card { box-shadow: none; border: 1px solid #000; } .payment-grid { grid-template-columns: 1fr; } }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 40px;
+        }
+
+        .main-logo {
+            height: 55px;
+            filter: drop-shadow(0 0 10px var(--accent-glow));
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .nav-links a.active {
+            color: var(--accent);
+        }
+
+        .lang-btn {
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--success);
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--success);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--success);
+        }
+
+        h1 {
+            color: var(--text-white);
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: var(--accent);
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 40px;
+        }
+
+        .payment-box {
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .card h2 {
+            color: var(--text-white);
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            background-color: rgba(5, 11, 20, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px;
+            color: var(--text-white);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #00f0ff, #0072ff);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            padding: 16px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 240, 255, 0.4);
+        }
+
+        .cards-support {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            filter: grayscale(40%);
+        }
+
+        .cards-support img {
+            height: 24px;
+        }
     </style>
 </head>
-<body class="dark-theme">
+<body>
+
     <div class="container">
         <header>
-            <div class="logo-area">
-                <!--  -->
-                <img src="522c52c46533e46dbd22.jpg" alt="CN Logo" class="main-logo" onerror="this.src='https://imgbox.com'">
+            <img src="https://github.io" alt="CN Logo" class="main-logo">
+            <div class="nav-links">
+                <a href="#" class="active">Thanh toán</a>
+                <a href="#">Thông tin công ty</a>
             </div>
-            <nav class="nav-links">
-                <a href="#" class="active" data-vi="Thanh toán" data-en="Payment">Thanh toán</a>
-                <a href="#company-info" data-vi="Thông tin công ty" data-en="Company Info">Thông tin công ty</a>
-            </nav>
-            <div class="lang-switcher">
-                <button id="btn-lang" onclick="toggleLanguage()">EN</button>
-            </div>
+            <button class="lang-btn">EN</button>
         </header>
 
-        <main class="payment-grid">
-            <section class="invoice-panel" id="company-info">
-                <div>
-                    <div class="badge-status">
-                        <span class="dot"></span> <span data-vi="Cổng thanh toán bảo mật HTTPS" data-en="Secure HTTPS Payment Gateway">Cổng thanh toán bảo mật HTTPS</span>
-                    </div>
-                    <h1 class="company-title">CN SERVICE TRADING COMPANY LIMITED</h1>
-                    <p class="company-sub">Trading, Import & Export, Commercial Services</p>
+        <div class="status-badge">
+            <div class="status-dot"></div>
+            Cổng thanh toán quốc tế bảo mật 3D-Secure
+        </div>
+
+        <h1>CN SERVICE TRADING COMPANY LIMITED</h1>
+        <div class="subtitle">TRADING, IMPORT & EXPORT, COMMERCIAL SERVICES</div>
+
+        <div class="payment-box">
+            <div class="card">
+                <h2>Khởi tạo cổng thanh toán quốc tế</h2>
+                
+                <div class="form-group">
+                    <label for="currency">Loại tiền tệ (Currency)</label>
+                    <select id="currency" onchange="toggleExchangeRate()">
+                        <option value="USD">USD - Đô la Mỹ</option>
+                        <option value="VND">VND - Việt Nam Đồng</option>
+                    </select>
                 </div>
 
-                <div class="input-form no-print">
-                    <div class="form-title" data-vi="Khởi tạo thông tin thanh toán" data-en="Initialize Payment Info">Khởi tạo thông tin thanh toán</div>
-                    <div class="input-group">
-                        <label data-vi="Số tiền cần chuyển (VNĐ)" data-en="Amount (VND)">Số tiền cần chuyển (VNĐ)</label>
-                        <input type="number" id="input-amount" class="input-field" placeholder="Ví dụ: 500000" oninput="updateDynamicQR()">
-                    </div>
-                    <div class="input-group">
-                        <label data-vi="Nội dung chuyển khoản" data-en="Payment Description">Nội dung chuyển khoản</label>
-                        <input type="text" id="input-desc" class="input-field" placeholder="Ví dụ: THANH TOAN DON HANG" oninput="updateDynamicQR()">
-                    </div>
+                <div class="form-group">
+                    <label id="amountLabel" for="amount">Số tiền cần chuyển (USD)</label>
+                    <input type="number" id="amount" placeholder="Ví dụ: 100" oninput="calculateVND()">
                 </div>
 
-                <div class="info-table">
-                    <div class="info-row">
+                <div id="exchangeRateGroup" class="form-group">
+                    <label style="color: var(--accent);">Tạm tính quy đổi sang VND (Tỷ giá: 1 USD = 25,500 VND)</label>
+                    <input type="text" id="convertedAmount" readonly style="background: rgba(255,255,255,0.05); color: #fff;" value="0 VND">
+                </div>
+
+                <div class="form-group">
+                    <label for="memo">Nội dung thanh toán (Description)</label>
+                    <input type="text" id="memo" placeholder="Ví dụ: THANH TOAN DON HANG 102">
+                </div>
+
+                <button class="submit-btn" onclick="processInternationalPayment()">TIẾN HÀNH THANH TOÁN (PAY NOW)</button>
+
+                <div class="cards-support">
+                    <img src="https://icons8.com" alt="Visa">
+                    <img src="https://icons8.com" alt="Mastercard">
+                    <img src="https://icons8.com" alt="JCB">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const EXCHANGE_RATE = 25500; // Cập nhật tỷ giá thực tế tại đây
+        
+        // ĐIỀN LINK THANH TOÁN DOANH NGHIỆP CỦA BẠN VÀO ĐÂY
+        const PAYOS_LINK = "https://payos.vn"; 
+
+        function toggleExchangeRate() {
+            const currency = document.getElementById("currency").value;
+            const amountLabel = document.getElementById("amountLabel");
+            const exchangeRateGroup = document.getElementById("exchangeRateGroup");
+            const amountInput = document.getElementById("amount");
+
+            if (currency === "VND") {
+                amountLabel.innerText = "Số tiền cần chuyển (VND)";
+                amountInput.placeholder = "Ví dụ: 2500000";
+                exchangeRateGroup.style.display = "none";
+            } else {
+                amountLabel.innerText = "Số tiền cần chuyển (USD)";
+                amountInput.placeholder = "Ví dụ: 100";
+                exchangeRateGroup.style.display = "block";
+            }
+            calculateVND();
+        }
+
+        function calculateVND() {
+            const currency = document.getElementById("currency").value;
+            const amount = document.getElementById("amount").value;
+            const convertedInput = document.getElementById("convertedAmount");
+
+            if (currency === "USD" && amount > 0) {
+                const totalVND = amount * EXCHANGE_RATE;
+                convertedInput.value = totalVND.toLocaleString('vi-VN') + " VND";
+            } else {
+                convertedInput.value = "0 VND";
+            }
+        }
+
+        function processInternationalPayment() {
+            const currency = document.getElementById("currency").value;
+            const amount = document.getElementById("amount").value;
+            const memo = document.getElementById("memo").value.trim();
+
+            if (!amount || amount <= 0) {
+                alert("Vui lòng nhập số tiền hợp lệ / Please enter a valid amount.");
+                return;
+            }
+
+            // Tính toán số tiền cuối cùng bằng VND để gửi lên cổng thanh toán
+            let finalAmountVND = currency === "USD" ? amount * EXCHANGE_RATE : amount;
+
+            // Xử lý tạo link thanh toán động hoặc chuyển hướng đến Link thanh toán cố định của doanh nghiệp
